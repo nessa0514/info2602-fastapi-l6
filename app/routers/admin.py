@@ -16,7 +16,7 @@ from app.pagination import Pagination
 admin_router = APIRouter(tags=["Admin App"])
 
 @admin_router.get("/admin")
-def admin_page(request:Request, db:SessionDep, user:AdminDep, page: int = Query(default=1, ge=1), limit: int = Query(default=100, le=100), q: str = Query(default='')):
+def admin_page(request:Request, db:SessionDep, user:AdminDep, page: int = Query(default=1, ge=1), limit: int = Query(default=100, le=100), q: str = Query(default=''), done:str =  Query(default="any")):
     offset = (page - 1) * limit
 
     db_qry = select(Todo).join(User)
@@ -24,6 +24,15 @@ def admin_page(request:Request, db:SessionDep, user:AdminDep, page: int = Query(
         db_qry = db_qry.where(
             Todo.text.ilike(f"%{q}%") | User.username.ilike(f"%{q}%")
         )
+    if done == "true": #note the string here
+        db_qry = db_qry.where(
+            Todo.done == True
+        )
+    elif done == "false": 
+        db_qry = db_qry.where(
+            Todo.done == False
+        )
+    # Note that we on'y really care if "done" is true/false, anything else we ignore
     count_qry = select(func.count()).select_from(db_qry.subquery())
     count_todos = db.exec(count_qry).one()
 
@@ -37,6 +46,7 @@ def admin_page(request:Request, db:SessionDep, user:AdminDep, page: int = Query(
             "current_user": user,
             "todos": todos,
             "pagination": pagination,
-            "q":q
+            "q":q,
+            "done": done
         }
     )
