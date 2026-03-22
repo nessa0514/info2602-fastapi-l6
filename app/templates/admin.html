@@ -61,8 +61,9 @@
           </tbody>
         </table>
 
-<div class="row">
-    <ul class="pagination">
+ <div class="row" style="display: flex; align-items: center; justify-content: center; position: relative;">
+
+    <ul class="pagination" style="margin: 0;">
       {% if pagination.has_prev %}
       <li class="waves-effect">
         <a href="{{ url_for('admin_page') }}?page={{ pagination.prev_num }}">
@@ -102,6 +103,16 @@
       {% endif %}
     </ul>
 
+    <div class="input-field" style="position: absolute; right: 25px; margin: 0; ">
+      <select id="limit-select" onchange="location = this.value;">
+        {% for n in [10, 25, 50, 100] %}
+        <option value="{{ url_for('admin_page') }}?page=1&limit={{ n }}" {% if pagination.limit==n %}selected{% endif
+          %}>
+          {{ n }} rows
+        </option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
         
       </main>
