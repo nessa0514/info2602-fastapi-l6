@@ -24,3 +24,18 @@ async def stats_page(
             "current_user": user
         }
     )
+
+@stats_router.get("/todo-stats")
+async def stats_page(
+    request: Request,
+    user: AdminDep,
+    db: SessionDep
+):
+    todos = db.exec(select(Todo)).all()
+    res = {}
+    for todo in todos:
+        if todo.user.username in res:
+            res[todo.user.username] += 1
+        else:
+            res[todo.user.username] = 1
+    return res
