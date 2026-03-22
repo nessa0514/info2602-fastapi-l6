@@ -18,6 +18,20 @@
 
 
   <form method="GET" action="/admin">
+     <div class="row">
+             <label>
+              <input class="with-gap blue" name="done" type="radio" value="true" onchange="this.form.submit()" {{ "checked" if done=="true" }} />
+              <span>Done</span>
+            </label>
+            <label>
+              <input class="with-gap blue" name="done" type="radio" value="false" onchange="this.form.submit()" {{ "checked" if done=="false" }} />
+              <span>Not Done</span>
+            </label>
+            <label>
+              <input class="with-gap blue" name="done" type="radio" value="any" onchange="this.form.submit()" {{ "checked" if done=="any" }} />
+              <span>Any</span>
+            </label>
+          </div>
     <div class="row">
       <div class="col m10 input-field">
         <input class="blue-text" name="q" type="search" placeholder="Search" value="{{q}}">
